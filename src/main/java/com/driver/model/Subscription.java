@@ -1,13 +1,10 @@
 package com.driver.model;
 
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.data.annotation.CreatedDate;
+
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
@@ -18,16 +15,19 @@ public class Subscription {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @Enumerated(EnumType.STRING)
     private SubscriptionType subscriptionType;
 
     private int noOfScreensSubscribed;
 
+    @Temporal(TemporalType.TIMESTAMP)
     private Date startSubscriptionDate;
 
     private int totalAmountPaid;
 
     @OneToOne
     @JoinColumn
+    @JsonIgnore
     private User user;
 
     public Subscription(SubscriptionType subscriptionType, int noOfScreensSubscribed, Date startSubscriptionDate, int totalAmountPaid) {
@@ -49,6 +49,7 @@ public class Subscription {
         this.id = id;
     }
 
+    @Enumerated(EnumType.STRING)
     public SubscriptionType getSubscriptionType() {
         return subscriptionType;
     }

@@ -2,6 +2,9 @@ package com.driver.EntryDto;
 
 import com.driver.model.SubscriptionType;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+
 
 public class SubscriptionEntryDto {
 
@@ -23,6 +26,7 @@ public class SubscriptionEntryDto {
         this.userId = userId;
     }
 
+    @Enumerated(EnumType.STRING)
     public SubscriptionType getSubscriptionType() {
         return subscriptionType;
     }
