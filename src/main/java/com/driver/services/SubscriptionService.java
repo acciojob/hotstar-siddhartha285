@@ -87,7 +87,7 @@ public class SubscriptionService {
 
                 break;
             case ELITE:
-                throw new IllegalStateException("Already at highest plan (ELITE)");
+                throw new IllegalStateException();
 
         }
         subscription.setTotalAmountPaid(newAmountToBePaid);
