@@ -36,8 +36,8 @@ public class ProductionHouseService {
         else avg=sum/count;
         productionHouse.setRatings(avg);
         productionHouse.setWebSeriesList(productionHouseWebseries);
-        productionHouseRepository.save(productionHouse);
-        return (int)avg;
+        ProductionHouse saved=productionHouseRepository.save(productionHouse);
+        return saved.getId();
 
     }
 

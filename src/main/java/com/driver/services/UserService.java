@@ -36,21 +36,28 @@ public class UserService {
         //Return the count of all webSeries that a user can watch based on his ageLimit and subscriptionType
         //Hint: Take out all the Webseries from the WebRepository
         Optional<User> optionalUser = userRepository.findById(userId);
-        User returnedUser = optionalUser.get();
+        if (!optionalUser.isPresent()) return 0;
+        User user = optionalUser.get();
 
-        SubscriptionType subscription = returnedUser.getSubscription().getSubscriptionType(); // keep it as enum
-        int age = returnedUser.getAge();
+        int age = user.getAge();
+        SubscriptionType userSubscription = user.getSubscription().getSubscriptionType();
 
-        List<SubscriptionType> allowedTypes = new ArrayList<>();
-        if (subscription == SubscriptionType.ELITE) {
-            allowedTypes = List.of(SubscriptionType.BASIC, SubscriptionType.PRO, SubscriptionType.ELITE);
-        } else if (subscription == SubscriptionType.PRO) {
-            allowedTypes = List.of(SubscriptionType.BASIC, SubscriptionType.PRO);
-        } else if (subscription == SubscriptionType.BASIC) {
-            allowedTypes = List.of(SubscriptionType.BASIC);
+        List<WebSeries> allWebSeries = webSeriesRepository.findAll();
+
+        int count = 0;
+        for (WebSeries ws : allWebSeries) {
+            if (ws.getAgeLimit() <= age &&
+                    isSubscriptionAllowed(userSubscription, ws.getSubscriptionType())) {
+                count++;
+            }
         }
+        return count;
+    }
 
-        return webSeriesRepository.countViewableWebSeries(age, allowedTypes);
+    private boolean isSubscriptionAllowed(SubscriptionType userSub, SubscriptionType seriesSub) {
+        if (userSub == SubscriptionType.ELITE) return true;
+        if (userSub == SubscriptionType.PRO && seriesSub != SubscriptionType.ELITE) return true;
+        return userSub == seriesSub;
     }
 
 
